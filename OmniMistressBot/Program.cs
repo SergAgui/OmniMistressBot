@@ -18,7 +18,7 @@ namespace OmniMistressBot
             discord = new DiscordClient(new DiscordConfiguration
             {
                 //Configuration of Discord Client
-                Token = "NzMwMTMwNTMwNjYxODI2Nzky.XwXMtw.TFI7XPTSlSIbffhZUyfyjNNQjtc",
+                Token = "",
                 TokenType = TokenType.Bot,
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug

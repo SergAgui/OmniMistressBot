@@ -25,13 +25,7 @@ namespace OmniMistressBot
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug
             });
-            
-            //Respond to "ping" with "pong"
-            discord.MessageCreated += async e =>
-            {
-                if (e.Message.Content.ToLower().StartsWith("ping"))
-                    await e.Message.RespondAsync(":ping_pong:");
-            };
+
             //Log if client is ready, guild is available, and if client errored
             discord.Ready += Discord_Ready;
             discord.GuildAvailable += Discord_GuildAvailable;
@@ -48,7 +42,7 @@ namespace OmniMistressBot
             commands.CommandErrored += Commands_CommandErrored;
 
             //Using MyCommands class to hold potential Commands
-            commands.RegisterCommands<MyCommands>();
+            commands.RegisterCommands<MemeCommands>();
 
             await discord.ConnectAsync();
             await Task.Delay(-1);

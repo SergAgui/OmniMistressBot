@@ -13,9 +13,9 @@ namespace OmniMistressBot
     public class MyCommands
     {
         [Command("hi")]
-        public async Task Hi(CommandContext ctx)
+        public async Task Hi(CommandContext context)
         {
-            await ctx.RespondAsync($"👋 Hi, {ctx.User.Mention}. That'll be $3.50.");
+            await context.RespondAsync($"👋 Hi, {context.User.Mention}. That'll be $3.50.");
         }
 
         [Command("pepe"), Aliases("feelsbad"), Description("Feels bad, man")]

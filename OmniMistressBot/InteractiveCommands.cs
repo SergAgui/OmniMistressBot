@@ -36,8 +36,9 @@ namespace OmniMistressBot
             await context.RespondAsync($"GO!! Code: {code}");
 
             var message = await interactivity.WaitForMessageAsync(c => c.Content.Contains(code), TimeSpan.FromSeconds(30));
-            //Problem: Bot accepts itself stating the code as a response
-            //Below is a start, but will likely still accept code from self and go to 'else' *fix*
+
+            //Below prevents bot from accepting itself stating the code as a response,
+            //but may still accept code from self and go to 'else'
             if (message != null && message.User.IsBot == false)
             {
                 await context.RespondAsync($"The winner is: {message.User.Mention}");

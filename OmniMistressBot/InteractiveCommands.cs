@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using DSharpPlus;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
+
+namespace OmniMistressBot
+{
+    public class InteractiveCommands
+    {
+        [Command("coderace"), Description("First to respond with generated code wins")]
+        public async Task CodeRace(CommandContext context)
+        {
+            InteractivityModule interactivity = context.Client.GetInteractivityModule();
+
+            await context.RespondAsync("First to type the code within 30 seconds wins! Ready?");
+            for (int i = 3; i >= 0; i--)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                if (i!= 0)
+                {
+                    await context.RespondAsync($"{i}");
+                }
+            }
+            byte[] codebytes = new byte[4];
+            using (var rng = RandomNumberGenerator.Create())
+                rng.GetBytes(codebytes);
+            string code = BitConverter.ToString(codebytes).ToLower().Replace("-", "");
+            
+            await context.RespondAsync($"GO!! Code: {code}");
+
+            var message = await interactivity.WaitForMessageAsync(c => c.Content.Contains(code), TimeSpan.FromSeconds(30));
+            //Problem: Bot accepts itself stating the code as a response
+            //Below is a start, but will likely still accept code from self and go to 'else' *fix*
+            if (message != null && message.User.IsBot == false)
+            {
+                await context.RespondAsync($"The winner is: {message.User.Mention}");
+            }
+            else
+            {
+                await context.RespondAsync("No one played?! Shame...");
+            }
+        }
+    }
+}

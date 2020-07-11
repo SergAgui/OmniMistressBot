@@ -13,7 +13,7 @@ namespace OmniMistressBot
 {
     public class MemeCommands
     {
-        [Command("hi")]
+        [Command("hi"), Aliases("hello", "greeting", "greetings")]
         public async Task Hi(CommandContext context)
         {
             await context.RespondAsync($"👋 Hi, {context.User.Mention}. That'll be $3.50.");

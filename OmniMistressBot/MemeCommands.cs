@@ -111,5 +111,14 @@ namespace OmniMistressBot
             };
             await context.RespondAsync(embed: embed);
         }
+        [Command("rolld100"), Description("Rolls a d100 die")]
+        public async Task DiceRoll(CommandContext context)
+        {
+            await context.TriggerTypingAsync();
+
+            Random random = new Random();
+            int die = random.Next(1, 100);
+            await context.RespondAsync($"Rolled a {die}");
+        }
     }
 }

@@ -60,6 +60,7 @@ namespace OmniMistressBot
             //Using MyCommands class to hold potential Commands
             commands.RegisterCommands<MemeCommands>();
             commands.RegisterCommands<InteractiveCommands>();
+            commands.RegisterCommands<DiceRolls>();
 
             await discord.ConnectAsync();
             await Task.Delay(-1);

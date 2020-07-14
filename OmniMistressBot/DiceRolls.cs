@@ -6,11 +6,31 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
 
 namespace OmniMistressBot
 {
     public class DiceRolls
     {
+        [Command("roll"), Description("Rolls any number of dice of any size")]
+        public async Task Roll(CommandContext context)
+        {
+            //InteractivityModule interactivity = context.Client.GetInteractivityModule();
+            await context.TriggerTypingAsync();
+            int[] com = new int[2];
+            string message = context.Message.Content;
+            string[] amtSize =  message.Split('d');
+            for (int i = 0; i < amtSize.Length; i++)
+            {
+                com[i] = Convert.ToInt32(amtSize[i]);
+            }
+            
+            
+            Random random = new Random();
+            int die = random.Next();
+            
+        }
+
         [Command("d4"), Description("Rolls a d4 die")]
         public async Task Roll4(CommandContext context)
         {

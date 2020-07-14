@@ -13,3 +13,5 @@ Code Race mini game
 Currently in development:
 Music Channel
 Stat Tracker
+
+By: Sergio A.

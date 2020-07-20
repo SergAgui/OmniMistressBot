@@ -36,18 +36,27 @@ namespace OmniMistressBot
 
             await context.RespondAsync($"Rolls: [{String.Join(", ", rolls)}] Sum: {sum}");
         }
+        
         [Command("roleoff"), Aliases("rc", "ro"), Description("Challenge another user to a roll off, highest roll upgrades role")]
         public async Task RoleRoll(CommandContext context, DiscordUser user)
         {
             InteractivityModule interactivity = context.Client.GetInteractivityModule();
             await context.TriggerTypingAsync();
 
+            DiscordEmoji emoji = DiscordEmoji.FromName(context.Client, ":+1:");
             var embed = new DiscordEmbedBuilder
             {
-                Title = $"{context.Message.Author} has challenged {user} to a Role Off! Do you accept?",
+                Title = $"{context.Message.Author.Username} has challenged {user.Username} to a Role Off! Do you accept?",
                 Description = "React with Yes :+1: || No :-1:"
             };
-            var response = await context.RespondAsync(embed: embed);
+            await context.RespondAsync(embed: embed);
+
+            var emote = await interactivity.WaitForReactionAsync(e => e == emoji, user, TimeSpan.FromSeconds(30));
+            if (emote != null)
+            {
+                await context.RespondAsync($"{user.Username} has agreed! Role Off begins!!");
+            }
         }
+         
     }
 }

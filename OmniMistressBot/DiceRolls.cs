@@ -55,11 +55,34 @@ namespace OmniMistressBot
             };
             await context.RespondAsync(embed: embed);
 
-            //
+            var agreeEmbed = new DiscordEmbedBuilder
+            {
+                Title = $"{user.Username} has agreed! Role Off begins!!",
+                Description = "Rolling..."
+            };
+
+            //Starts the roll off and announces the victor unless there is a tie
+            //Refactor soon
             var emote = await interactivity.WaitForReactionAsync(e => e == e.Name, user, TimeSpan.FromSeconds(30));
             if (emote.Emoji.Name == yes)
             {
-                await context.RespondAsync($"{user.Username} has agreed! Role Off begins!!");
+                await context.RespondAsync(embed: agreeEmbed);
+                await context.TriggerTypingAsync();
+                Random rand = new Random();
+                int rollOne = rand.Next(1, 100);
+                int rollTwo = rand.Next(1, 100);
+                if (rollOne > rollTwo)
+                {
+                    await context.RespondAsync($"Looks like {context.Message.Author.Username} rolled a {rollOne} against {user.Username}'s {rollTwo} and won!");
+                }
+                else if (rollTwo > rollOne)
+                {
+                    await context.RespondAsync($"{user.Username} rolled a {rollTwo} to {context.Message.Author.Username}'s {rollOne}! Meaning they keep their Role. Better luck next time!");
+                }
+                else
+                {
+                    await context.RespondAsync($"There was a tie roll of {rollOne}. No changes to Roles... this time.");
+                }
             }
             else if (emote.Emoji.Name == nope || emote == null)
             {

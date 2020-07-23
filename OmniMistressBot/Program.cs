@@ -57,7 +57,7 @@ namespace OmniMistressBot
             commands.CommandExecuted += Commands_CommandExecuted;
             commands.CommandErrored += Commands_CommandErrored;
 
-            //Using MyCommands class to hold potential Commands
+            //Command classes in use
             commands.RegisterCommands<MemeCommands>();
             commands.RegisterCommands<InteractiveCommands>();
             commands.RegisterCommands<DiceRolls>();

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -14,21 +17,13 @@ namespace OmniMistressBot
 {
     class RoleCommands
     {
-        [Command("rolefacts"), Aliases("rf"), Description("Check facts about a specific role [!rc role]")]
+        [Command("roleone"), Aliases("r1"), Description("Update to Role1")]
         [Hidden]
-        public async Task RoleFacts(CommandContext context, DiscordRole role)
+        public async Task AllRoles(CommandContext context)
         {
-            var embed = new DiscordEmbedBuilder
-            {
-                Title = $"{role.Name} Facts:",
-                Description = $"Color: {Convert.ToString(role.Color)}, " +
-                $"IsHoisted?: {Convert.ToString(role.IsHoisted)}, " +
-                $"Permissions: {Convert.ToString(role.Permissions)}, " +
-                $"Position: {Convert.ToString(role.Position)}"
-            };
-            var member = context.Member;
-            await context.Guild.GrantRoleAsync(member,role);
-            await context.RespondAsync(embed: embed);
+            var role1 = context.Guild.Roles.FirstOrDefault(x => x.Name == "Role1");
+            await context.Member.GrantRoleAsync(role1);
+            await context.RespondAsync($"Updated to {role1.Name}");
         }
     }
 }

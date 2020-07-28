@@ -17,13 +17,13 @@ namespace OmniMistressBot
 {
     class RoleCommands
     {
-        [Command("roleone"), Aliases("r1"), Description("Update to Role1")]
+        [Command("upgraderole"), Aliases("ur"), Description("Upgrade a user to any role [!ur @{user} {role}]")]
         [Hidden]
-        public async Task AllRoles(CommandContext context)
+        public async Task UpgradeRole(CommandContext context, DiscordMember member, string role)
         {
-            var role1 = context.Guild.Roles.FirstOrDefault(x => x.Name == "Role1");
-            await context.Member.GrantRoleAsync(role1);
-            await context.RespondAsync($"Updated to {role1.Name}");
+            var upgradeRole = context.Guild.Roles.FirstOrDefault(x => x.Name == role);
+            await member.GrantRoleAsync(upgradeRole);
+            await context.RespondAsync($"Updated to {upgradeRole.Name}");
         }
     }
 }

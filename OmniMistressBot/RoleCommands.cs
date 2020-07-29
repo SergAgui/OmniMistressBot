@@ -18,20 +18,29 @@ namespace OmniMistressBot
 {
     class RoleCommands
     {
+        [RequireOwner]
         [Command("upgraderole"), Aliases("ur"), Description("Upgrade a user to any role [!ur @{user} {role}]")]
         [Hidden]
         public async Task UpgradeRole(CommandContext context, DiscordMember member, string role)
         {
-            //ReadOnlyList to just names
-            List<string> roleList = new List<string>();
-            var check = context.Guild.Roles;
-            foreach (var item in check)
+            //ReadOnlyList of roles in Guild to string list of names
+            List<string> guildRoleList = new List<string>();
+            var guildRoles = context.Guild.Roles;
+            foreach (var item in guildRoles)
             {
-                roleList.Add(item.Name);
+                guildRoleList.Add(item.Name);
             }
 
-            //check if role exists in server
-            if (member.IsBot != true && roleList.Exists(r => r == role))
+            //ReadOnlyList of roles user is part of to string list
+            List<string> userRoleList = new List<string>();
+            var userRoles = context.Member.Roles;
+            foreach (var item in userRoles)
+            {
+                userRoleList.Add(item.Name);
+            }
+
+            //check if role exists in server, @user isn't a bot, and @user isn't already in role
+            if (member.IsBot != true && guildRoleList.Exists(r => r == role) && userRoleList.Exists(u => u == role) == false)
             {
                 var upgradeRole = context.Guild.Roles.FirstOrDefault(x => x.Name == role);
                 await member.GrantRoleAsync(upgradeRole);
@@ -39,22 +48,32 @@ namespace OmniMistressBot
             }
             else
             {
-                await context.RespondAsync($"Couldn't complete. The {role} role does not exist in this server and bot's aren't people.");
+                await context.RespondAsync($"Couldn't complete. Either the {role} role does not exist in this server and bot's aren't people or {member.Username} is already part of that role.");
             }
         }
-
+        [RequireOwner]
         [Command("downgraderole"), Aliases("dr", "downgrade"), Description("Take away a role from a user [!dr @{user} {role}]")]
         [Hidden]
         public async Task DowngradeRole(CommandContext context, DiscordMember member, string role)
         {
-            List<string> roleList = new List<string>();
-            var check = context.Guild.Roles;
-            foreach (var item in check)
+            //ReadOnlyList of roles in Guild to string list of names
+            List<string> guildRoleList = new List<string>();
+            var guildRoles = context.Guild.Roles;
+            foreach (var item in guildRoles)
             {
-                roleList.Add(item.Name);
+                guildRoleList.Add(item.Name);
             }
-            
-            if (member.IsBot != true && roleList.Exists(r => r == role))
+
+            //ReadOnlyList of roles user is part of to string list
+            List<string> userRoleList = new List<string>();
+            var userRoles = context.Member.Roles;
+            foreach (var item in userRoles)
+            {
+                userRoleList.Add(item.Name);
+            }
+
+            //check if role exists in server, @user isn't a bot, and @user is in role
+            if (member.IsBot != true && guildRoleList.Exists(r => r == role) && userRoleList.Exists(u => u == role))
             {
                 var takenRole = context.Guild.Roles.FirstOrDefault(x => x.Name == role);
                 await member.RevokeRoleAsync(takenRole);
@@ -62,7 +81,7 @@ namespace OmniMistressBot
             }
             else
             {
-                await context.RespondAsync($"Couldn't complete. The {role} role does not exist in this server and bot's aren't people.");
+                await context.RespondAsync($"Couldn't complete. Either the {role} role does not exist in this server and bot's aren't people or {member.Username} doesn't belong to that role.");
             }
         }
     }

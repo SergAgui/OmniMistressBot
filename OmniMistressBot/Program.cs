@@ -57,10 +57,11 @@ namespace OmniMistressBot
             commands.CommandExecuted += Commands_CommandExecuted;
             commands.CommandErrored += Commands_CommandErrored;
 
-            //Using MyCommands class to hold potential Commands
+            //Command classes in use
             commands.RegisterCommands<MemeCommands>();
             commands.RegisterCommands<InteractiveCommands>();
             commands.RegisterCommands<DiceRolls>();
+            commands.RegisterCommands<RoleCommands>();
 
             await discord.ConnectAsync();
             await Task.Delay(-1);

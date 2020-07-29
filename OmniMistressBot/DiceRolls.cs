@@ -1,87 +1,94 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.XPath;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
+
 
 namespace OmniMistressBot
 {
     public class DiceRolls
     {
-        [Command("d4"), Description("Rolls a d4 die")]
-        public async Task Roll4(CommandContext context)
+        [Command("roll"), Aliases("r"), Description("Rolls any size die a given number of times")]
+        public async Task Roll(CommandContext context, string dice)
         {
             await context.TriggerTypingAsync();
-
+            
+            //Spit string, ID values, and create array the size of the amount of dice being rolled
+            string[] amtSize = dice.Split('d');
+            int amountOfDice = Convert.ToInt32(amtSize[0]);
+            string[] rolls = new string[amountOfDice];
+            
+            //Roll any size dice for 'i' times
             Random random = new Random();
-            int die = random.Next(1, 4);
-            await context.RespondAsync($"Rolled a {die}");
+            for (int i = 0; i < amountOfDice; i++)
+            {
+                rolls[i] = Convert.ToString(random.Next(1, Convert.ToInt32(amtSize[1])));
+            }
+
+            int sum = Array.ConvertAll(rolls, r => Convert.ToInt32(r)).Sum();
+
+            await context.RespondAsync($"Rolls: [{String.Join(", ", rolls)}] Sum: {sum}");
         }
-        [Command("d6"), Description("Rolls a d6 die")]
-        public async Task Roll6(CommandContext context)
+        
+        [Command("rolloff"), Aliases("rc", "ro"), Description("Challenge another user to a roll off, highest roll upgrades role! (ex. !rolloff @username)")]
+        public async Task RoleRoll(CommandContext context, DiscordUser user)
         {
+            InteractivityModule interactivity = context.Client.GetInteractivityModule();
             await context.TriggerTypingAsync();
 
-            Random random = new Random();
-            int die = random.Next(1, 6);
-            await context.RespondAsync($"Rolled a {die}");
-        }
-        [Command("d8"), Description("Rolls a d8 die")]
-        public async Task Roll8(CommandContext context)
-        {
-            await context.TriggerTypingAsync();
+            //Yes and No emojis
+            DiscordEmoji yes = DiscordEmoji.FromName(context.Client, ":+1:");
+            DiscordEmoji nope = DiscordEmoji.FromName(context.Client, ":-1:");
+            var embed = new DiscordEmbedBuilder
+            {
+                Title = $"{context.Message.Author.Username} has challenged {user.Username} to a Roll Off! Do you accept?",
+                Description = "React with Yes :+1: || No :-1:"
+            };
+            await context.RespondAsync(embed: embed);
 
-            Random random = new Random();
-            int die = random.Next(1, 8);
-            await context.RespondAsync($"Rolled a {die}");
-        }
-        [Command("d10"), Description("Rolls a d10 die")]
-        public async Task Roll10(CommandContext context)
-        {
-            await context.TriggerTypingAsync();
+            var agreeEmbed = new DiscordEmbedBuilder
+            {
+                Title = $"{user.Username} has agreed! Role Off begins!!",
+                Description = "Rolling..."
+            };
 
-            Random random = new Random();
-            int die = random.Next(1, 10);
-            await context.RespondAsync($"Rolled a {die}");
+            //Starts the roll off and announces the victor unless there is a tie
+            //Refactor soon
+            var emote = await interactivity.WaitForReactionAsync(e => e == e.Name, user, TimeSpan.FromSeconds(30));
+            if (emote.Emoji.Name == yes)
+            {
+                await context.RespondAsync(embed: agreeEmbed);
+                await context.TriggerTypingAsync();
+                Random rand = new Random();
+                int rollOne = rand.Next(1, 100);
+                int rollTwo = rand.Next(1, 100);
+                if (rollOne > rollTwo)
+                {
+                    await context.RespondAsync($"Looks like {context.Message.Author.Username} rolled a {rollOne} against {user.Username}'s {rollTwo} and won!");
+                }
+                else if (rollTwo > rollOne)
+                {
+                    await context.RespondAsync($"{user.Username} rolled a {rollTwo} to {context.Message.Author.Username}'s {rollOne}! Meaning they keep their Role. Better luck next time!");
+                }
+                else
+                {
+                    await context.RespondAsync($"There was a tie roll of {rollOne}. No changes to Roles... this time.");
+                }
+            }
+            else if (emote.Emoji.Name == nope || emote == null)
+            {
+                await context.RespondAsync("Tough cookies :scream: They said NOPE!!");
+            }
         }
-        [Command("d12"), Description("Rolls a d12 die")]
-        public async Task Roll12(CommandContext context)
-        {
-            await context.TriggerTypingAsync();
-
-            Random random = new Random();
-            int die = random.Next(1, 12);
-            await context.RespondAsync($"Rolled a {die}");
-        }
-        [Command("d20"), Description("Rolls a d20 die")]
-        public async Task Roll20(CommandContext context)
-        {
-            await context.TriggerTypingAsync();
-
-            Random random = new Random();
-            int die = random.Next(1, 20);
-            await context.RespondAsync($"Rolled a {die}");
-        }
-        [Command("d50"), Description("Rolls a d50 die")]
-        public async Task Roll50(CommandContext context)
-        {
-            await context.TriggerTypingAsync();
-
-            Random random = new Random();
-            int die = random.Next(1, 50);
-            await context.RespondAsync($"Rolled a {die}");
-        }
-        [Command("d100"), Description("Rolls a d100 die")]
-        public async Task Roll100(CommandContext context)
-        {
-            await context.TriggerTypingAsync();
-
-            Random random = new Random();
-            int die = random.Next(1, 100);
-            await context.RespondAsync($"Rolled a {die}");
-        }
+         
     }
 }

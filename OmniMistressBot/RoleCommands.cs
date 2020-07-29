@@ -39,13 +39,31 @@ namespace OmniMistressBot
             }
             else
             {
-                await context.RespondAsync($"Couldn't complete. The {role} role does not exist in this server.");
+                await context.RespondAsync($"Couldn't complete. The {role} role does not exist in this server and bot's aren't people.");
             }
         }
 
-        /*public async Task DowngradeRole(CommandContext context, DiscordMember member, string role)
+        [Command("downgraderole"), Aliases("dr", "downgrade"), Description("Take away a role from a user [!dr @{user} {role}]")]
+        [Hidden]
+        public async Task DowngradeRole(CommandContext context, DiscordMember member, string role)
         {
-
-        }*/
+            List<string> roleList = new List<string>();
+            var check = context.Guild.Roles;
+            foreach (var item in check)
+            {
+                roleList.Add(item.Name);
+            }
+            
+            if (member.IsBot != true && roleList.Exists(r => r == role))
+            {
+                var takenRole = context.Guild.Roles.FirstOrDefault(x => x.Name == role);
+                await member.RevokeRoleAsync(takenRole);
+                await context.RespondAsync($"{member.Username} was removed from the {takenRole.Name} role");
+            }
+            else
+            {
+                await context.RespondAsync($"Couldn't complete. The {role} role does not exist in this server and bot's aren't people.");
+            }
+        }
     }
 }

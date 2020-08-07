@@ -17,6 +17,7 @@ namespace OmniMistressBot
         [Command("joinvoice"), Aliases("jv"), Description("Allows bot to join a specified voice channel. If no channel is given then will default to channel user is currently in.")]
         public async Task Join(CommandContext context, DiscordChannel channel = null)
         {
+            //Check if VoiceNext is configured or enabled
             var voiceNext = context.Client.GetVoiceNextClient();
             if (voiceNext == null)
             {
@@ -24,6 +25,7 @@ namespace OmniMistressBot
                 return;
             }
 
+            //Check if already connected to the server
             var vconnected = voiceNext.GetConnection(context.Guild);
             if (vconnected != null)
             {
@@ -31,6 +33,7 @@ namespace OmniMistressBot
                 return;
             }
 
+            //Check if a channel was mentioned or if member is not in voice channel
             var vstatus = context.Member?.VoiceState;
             if (vstatus?.Channel == null && channel == null)
             {
@@ -38,25 +41,54 @@ namespace OmniMistressBot
                 return;
             }
 
-            if (channel != null)
+            //If no channel was mentioned, join voice channel member is in
+            if (channel == null)
             {
                 channel = vstatus.Channel;
             }
 
-            await voiceNext.ConnectAsync(channel);
+            //Connect
             await context.RespondAsync($"Connected to {channel.Name}");
+            vconnected = await voiceNext.ConnectAsync(channel);
         }
 
         [RequireOwner]
-        [Command("leave"), Aliases("dcv"), Description("Disconnects voice")]
+        [Command("leave"), Aliases("dcv", "disconnect"), Description("Disconnects voice")]
         public async Task Leave(CommandContext context)
         {
+            //Check if VoiceNext is configured or enabled
             var voiceNext = context.Client.GetVoiceNextClient();
             if (voiceNext == null)
             {
                 await context.RespondAsync("Please enabled or configure VoiceNext");
                 return;
             }
+
+            //Check if not connected to the server
+            //Returning null atm, needs fix
+            var vconnected = voiceNext.GetConnection(context.Guild);
+            if (vconnected == null)
+            {
+                await context.RespondAsync("Not connected to this server");
+                return;
+            }
+
+            //Disconnect
+            await context.RespondAsync("Successfully Disconnected");
+            vconnected.Disconnect();
+        }
+
+        public async Task Play(CommandContext context, [RemainingText] string filename)
+        {
+            //Check if VoiceNext is configured or enabled
+            var voiceNext = context.Client.GetVoiceNextClient();
+            if (voiceNext == null)
+            {
+                await context.RespondAsync("Please enabled or configure VoiceNext");
+                return;
+            }
+
+            //Check if not connected to the server
 
             var vconnected = voiceNext.GetConnection(context.Guild);
             if (vconnected == null)
@@ -65,8 +97,16 @@ namespace OmniMistressBot
                 return;
             }
 
-            vconnected.Disconnect();
-            await context.RespondAsync("Successfully Disconnected");
+            if (!File.Exists(filename))
+            {
+                await context.RespondAsync($"{filename} does not exist");
+                return;
+            }
+
+            while (vconnected.IsPlaying)
+            {
+                await vconnected.WaitForPlaybackFinishAsync();
+            }
         }
     }
 }

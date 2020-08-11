@@ -33,7 +33,7 @@ namespace OmniMistressBot
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug,
                 AutoReconnect = true
-            }); ;
+            });
 
             //Log if client is ready, guild is available, and if client errored
             discord.Ready += Discord_Ready;

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "OmniMistressBot": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

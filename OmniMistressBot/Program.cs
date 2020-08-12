@@ -25,6 +25,7 @@ namespace OmniMistressBot
         }
         static async Task MainAsync(string[] args)
         {
+            
             discord = new DiscordClient(new DiscordConfiguration
             {
                 //Configuration of Discord Client

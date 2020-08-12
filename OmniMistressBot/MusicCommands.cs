@@ -54,7 +54,7 @@ namespace OmniMistressBot
 
         [RequireOwner]
         [Command("leave"), Aliases("dcv", "disconnect"), Description("Disconnects from voice channel")]
-        public async Task Leave(CommandContext context)
+        public async Task Leave(CommandContext context, DiscordChannel channel)
         {
             //Check if VoiceNext is configured or enabled
             var voiceNext = context.Client.GetVoiceNextClient();
@@ -74,7 +74,7 @@ namespace OmniMistressBot
             }
 
             //Disconnect
-            vconnected.Disconnect();
+            vconnected.Dispose();
             await context.RespondAsync("Successfully Disconnected");
         }
     }

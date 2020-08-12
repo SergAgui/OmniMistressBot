@@ -16,5 +16,4 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 COPY config.json ./
-COPY emotes.json ./
 ENTRYPOINT ["dotnet", "OmniMistressBot.dll"]

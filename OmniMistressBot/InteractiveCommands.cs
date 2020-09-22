@@ -17,7 +17,7 @@ namespace OmniMistressBot
         [Command("coderace"), Description("First to respond with generated code wins")]
         public async Task CodeRace(CommandContext context)
         {
-            InteractivityModule interactivity = context.Client.GetInteractivityModule();
+            var interactivity = context.Client.GetInteractivity();
 
             await context.RespondAsync("First to type the code within 30 seconds wins! Ready?");
             for (int i = 3; i >= 0; i--)
@@ -39,9 +39,9 @@ namespace OmniMistressBot
 
             //Below prevents bot from accepting itself stating the code as a response,
             //but may still accept code from self and go to 'else'
-            if (message != null && message.User.IsBot == false)
+            if (message.Result != null && message.Result.Author.IsBot == false)
             {
-                await context.RespondAsync($"The winner is: {message.User.Mention}");
+                await context.RespondAsync($"The winner is: {message.Result.Author.Mention}");
             }
             else
             {

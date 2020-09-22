@@ -4,8 +4,6 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
-using DSharpPlus.VoiceNext;
-using DSharpPlus.VoiceNext.Codec;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -16,8 +14,8 @@ namespace OmniMistressBot
     {
         static DiscordClient discord;
         static CommandsNextModule commands;
+        static Command
         static InteractivityModule interactivity;
-        static VoiceNextClient voice;
         
         static void Main(string[] args)
         {
@@ -48,13 +46,6 @@ namespace OmniMistressBot
                 Timeout = TimeSpan.FromMinutes(2)
             });
 
-            //Voice channel will be used for broadcasting music
-            voice = discord.UseVoiceNext(new VoiceNextConfiguration
-            {
-                VoiceApplication = VoiceApplication.Music,
-                EnableIncoming = false
-            });
-
             //Set prefix to commands
             commands = discord.UseCommandsNext(new CommandsNextConfiguration
             {
@@ -72,7 +63,6 @@ namespace OmniMistressBot
             commands.RegisterCommands<InteractiveCommands>();
             commands.RegisterCommands<DiceRolls>();
             commands.RegisterCommands<RoleCommands>();
-            commands.RegisterCommands<MusicCommands>();
 
             await discord.ConnectAsync();
             await Task.Delay(-1);

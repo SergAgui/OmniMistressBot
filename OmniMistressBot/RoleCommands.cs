@@ -28,7 +28,7 @@ namespace OmniMistressBot
             var guildRoles = context.Guild.Roles;
             foreach (var item in guildRoles)
             {
-                guildRoleList.Add(item.Name);
+                guildRoleList.Add(item.Value.Name);
             }
 
             //ReadOnlyList of roles user is part of to string list
@@ -42,7 +42,7 @@ namespace OmniMistressBot
             //check if role exists in server, @user isn't a bot, and @user isn't already in role
             if (member.IsBot != true && guildRoleList.Exists(r => r == role) && userRoleList.Exists(u => u == role) == false)
             {
-                var upgradeRole = context.Guild.Roles.FirstOrDefault(x => x.Name == role);
+                var upgradeRole = context.Guild.Roles.FirstOrDefault(x => x.Value.Name == role);
                 await member.GrantRoleAsync(upgradeRole);
                 await context.RespondAsync($"Updated to {upgradeRole.Name}");
             }

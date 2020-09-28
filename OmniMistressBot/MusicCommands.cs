@@ -49,7 +49,7 @@ namespace OmniMistressBot
 
             //Connect
             await context.RespondAsync($"Connected to {channel.Name}");
-            vconnected = await voiceNext.ConnectAsync(channel);
+            await voiceNext.ConnectAsync(channel);
         }
 
         [RequireOwner]
@@ -64,11 +64,19 @@ namespace OmniMistressBot
                 return;
             }
 
+            List<string> states = new List<string>();
+            var voiceStates = context.Guild.VoiceStates;
+            foreach (var item in voiceStates)
+            {
+                states.Add(item.ToString());
+            }
+
             //Check if not connected to the server
             //Returning null atm, needs fix
             var vconnected = voiceNext.GetConnection(context.Guild);
             if (vconnected == null)
             {
+                await context.RespondAsync($"{voiceStates}");
                 await context.RespondAsync($"Not connected to this server");
                 return;
             }

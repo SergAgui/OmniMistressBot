@@ -10,6 +10,7 @@
     <PackageReference Include="DSharpPlus.CommandsNext" Version="3.2.3" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="3.2.3" />
     <PackageReference Include="DSharpPlus.VoiceNext" Version="3.2.3" />
+    <PackageReference Include="DSharpPlus.VoiceNext.Natives" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

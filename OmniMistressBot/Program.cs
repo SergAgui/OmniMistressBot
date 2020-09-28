@@ -60,7 +60,8 @@ namespace OmniMistressBot
             {
                 StringPrefix = "!",
                 EnableDms = false,
-                EnableMentionPrefix = true
+                EnableMentionPrefix = true,
+                IgnoreExtraArguments = true
             });
 
             //Log command executed and if a command errored

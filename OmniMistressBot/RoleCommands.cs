@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
-using DSharpPlus.Interactivity;
 
 namespace OmniMistressBot
 {
@@ -43,8 +34,8 @@ namespace OmniMistressBot
             if (member.IsBot != true && guildRoleList.Exists(r => r == role) && userRoleList.Exists(u => u == role) == false)
             {
                 var upgradeRole = context.Guild.Roles.FirstOrDefault(x => x.Value.Name == role);
-                await member.GrantRoleAsync(upgradeRole);
-                await context.RespondAsync($"Updated to {upgradeRole.Name}");
+                await member.GrantRoleAsync(upgradeRole.Value);
+                await context.RespondAsync($"Updated to {upgradeRole.Value.Name}");
             }
             else
             {
@@ -61,7 +52,7 @@ namespace OmniMistressBot
             var guildRoles = context.Guild.Roles;
             foreach (var item in guildRoles)
             {
-                guildRoleList.Add(item.Name);
+                guildRoleList.Add(item.Value.Name);
             }
 
             //ReadOnlyList of roles user is part of to string list
@@ -75,9 +66,9 @@ namespace OmniMistressBot
             //check if role exists in server, @user isn't a bot, and @user is in role
             if (member.IsBot != true && guildRoleList.Exists(r => r == role) && userRoleList.Exists(u => u == role))
             {
-                var takenRole = context.Guild.Roles.FirstOrDefault(x => x.Name == role);
-                await member.RevokeRoleAsync(takenRole);
-                await context.RespondAsync($"{member.Username} was removed from the {takenRole.Name} role");
+                var takenRole = context.Guild.Roles.FirstOrDefault(x => x.Value.Name == role);
+                await member.RevokeRoleAsync(takenRole.Value);
+                await context.RespondAsync($"{member.Username} was removed from the {takenRole.Value.Name} role");
             }
             else
             {

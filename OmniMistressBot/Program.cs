@@ -7,15 +7,16 @@ using DSharpPlus.Interactivity;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace OmniMistressBot
 {
     class Program
     {
         static DiscordClient discord;
-        static CommandsNextModule commands;
-        static Command
-        static InteractivityModule interactivity;
+        static CommandsNextExtension commands;
+        
+        static InteractivityExtension interactivity;
         
         static void Main(string[] args)
         {
@@ -29,7 +30,7 @@ namespace OmniMistressBot
                 Token = "",
                 TokenType = TokenType.Bot,
                 UseInternalLogHandler = true,
-                LogLevel = LogLevel.Debug,
+                MinimumLogLevel = LogLevel.Debug,
                 AutoReconnect = true
             }); ;
 
@@ -41,7 +42,7 @@ namespace OmniMistressBot
             //Defaults: pagination behaviour, pagination timeout, timeout for other actions
             interactivity = discord.UseInteractivity(new InteractivityConfiguration
             {
-                PaginationBehaviour = TimeoutBehaviour.Ignore,
+                PaginationBehaviour = ,
                 PaginationTimeout = TimeSpan.FromMinutes(5),
                 Timeout = TimeSpan.FromMinutes(2)
             });

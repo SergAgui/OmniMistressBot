@@ -24,20 +24,12 @@ namespace OmniMistressBot
         public async Task UpgradeRole(CommandContext context, DiscordMember member, string role)
         {
             //ReadOnlyList of roles in Guild to string list of names
-            List<string> guildRoleList = new List<string>();
             var guildRoles = context.Guild.Roles;
-            foreach (var item in guildRoles)
-            {
-                guildRoleList.Add(item.Name);
-            }
+            List<string> guildRoleList = guildRoles.Select(item => item.Name).ToList();
 
             //ReadOnlyList of roles user is part of to string list
-            List<string> userRoleList = new List<string>();
             var userRoles = context.Member.Roles;
-            foreach (var item in userRoles)
-            {
-                userRoleList.Add(item.Name);
-            }
+            List<string> userRoleList = userRoles.Select(item => item.Name).ToList();
 
             //check if role exists in server, @user isn't a bot, and @user isn't already in role
             if (member.IsBot != true && guildRoleList.Exists(r => r == role) && userRoleList.Exists(u => u == role) == false)

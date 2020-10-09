@@ -47,10 +47,13 @@ namespace OmniMistressBot
                 Timeout = TimeSpan.FromMinutes(2)
             });
 
+            string[] prefixes = new string[] {"!", "."};
             //Set prefix to commands
             commands = discord.UseCommandsNext(new CommandsNextConfiguration
             {
-                StringPrefix = "!",
+                StringPrefixes = prefixes,
+                IgnoreExtraArguments = true,
+                CaseSensitive = false,
                 EnableDms = false,
                 EnableMentionPrefix = true
             });

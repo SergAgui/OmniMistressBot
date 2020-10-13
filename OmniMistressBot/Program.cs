@@ -42,9 +42,7 @@ namespace OmniMistressBot
             //Defaults: pagination behaviour, pagination timeout, timeout for other actions
             interactivity = discord.UseInteractivity(new InteractivityConfiguration
             {
-                PaginationBehaviour = ,
-                PaginationTimeout = TimeSpan.FromMinutes(5),
-                Timeout = TimeSpan.FromMinutes(2)
+                Timeout = TimeSpan.FromMinutes(5)
             });
 
             string[] prefixes = new string[] {"!", "."};

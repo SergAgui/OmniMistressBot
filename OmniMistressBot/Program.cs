@@ -29,7 +29,7 @@ namespace OmniMistressBot
                 //Configuration of Discord Client
                 Token = "",
                 TokenType = TokenType.Bot,
-                UseInternalLogHandler = true,
+                LoggerFactory = true,
                 MinimumLogLevel = LogLevel.Debug,
                 AutoReconnect = true
             }); ;

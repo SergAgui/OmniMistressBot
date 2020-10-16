@@ -7,7 +7,7 @@ using DSharpPlus.Entities;
 
 namespace OmniMistressBot
 {
-    class RoleCommands
+    class RoleCommands : BaseCommandModule
     {
         [RequireOwner]
         [Command("upgraderole"), Aliases("ur"), Description("Upgrade a user to any role [!ur @{user} {role}]")]

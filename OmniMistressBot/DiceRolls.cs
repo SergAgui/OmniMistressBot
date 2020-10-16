@@ -15,7 +15,7 @@ using DSharpPlus.Interactivity;
 
 namespace OmniMistressBot
 {
-    public class DiceRolls
+    public class DiceRolls : BaseCommandModule
     {
         [Command("roll"), Aliases("r"), Description("Rolls any size die a given number of times")]
         public async Task Roll(CommandContext context, string dice)
@@ -42,7 +42,7 @@ namespace OmniMistressBot
         [Command("rolloff"), Aliases("rc", "ro"), Description("Challenge another user to a roll off, highest roll upgrades role! (ex. !rolloff @username)")]
         public async Task RoleRoll(CommandContext context, DiscordUser user)
         {
-            InteractivityModule interactivity = context.Client.GetInteractivityModule();
+            InteractivityExtension interactivity = context.Client.GetInteractivity();
             await context.TriggerTypingAsync();
 
             //Yes and No emojis
@@ -63,8 +63,8 @@ namespace OmniMistressBot
 
             //Starts the roll off and announces the victor unless there is a tie
             //Refactor soon
-            var emote = await interactivity.WaitForReactionAsync(e => e == e.Name, user, TimeSpan.FromSeconds(30));
-            if (emote.Emoji.Name == yes)
+            var emote = await interactivity.WaitForReactionAsync(e => e == e.Message.Reactions, user, TimeSpan.FromSeconds(30));
+            if (emote.Result.Emoji.Name == yes)
             {
                 await context.RespondAsync(embed: agreeEmbed);
                 await context.TriggerTypingAsync();
@@ -84,7 +84,7 @@ namespace OmniMistressBot
                     await context.RespondAsync($"There was a tie roll of {rollOne}. No changes to Roles... this time.");
                 }
             }
-            else if (emote.Emoji.Name == nope || emote == null)
+            else if (emote.Result.Emoji.Name == nope || emote.Result == null)
             {
                 await context.RespondAsync("Tough cookies :scream: They said NOPE!!");
             }

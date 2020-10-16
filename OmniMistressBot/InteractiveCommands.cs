@@ -12,7 +12,7 @@ using DSharpPlus.Interactivity;
 
 namespace OmniMistressBot
 {
-    public class InteractiveCommands
+    public class InteractiveCommands : BaseCommandModule
     {
         [Command("coderace"), Description("First to respond with generated code wins")]
         public async Task CodeRace(CommandContext context)

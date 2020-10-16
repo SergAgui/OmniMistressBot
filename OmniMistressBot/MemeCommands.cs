@@ -11,7 +11,7 @@ using DSharpPlus.Entities;
 
 namespace OmniMistressBot
 {
-    public class MemeCommands
+    public class MemeCommands : BaseCommandModule
     {
         [Command("hi"), Aliases("hello", "greeting", "greetings")]
         public async Task Hi(CommandContext context)

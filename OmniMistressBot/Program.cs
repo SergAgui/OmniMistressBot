@@ -15,7 +15,6 @@ namespace OmniMistressBot
     {
         static DiscordClient discord;
         static CommandsNextExtension commands;
-        
         static InteractivityExtension interactivity;
         
         static void Main(string[] args)
@@ -29,10 +28,9 @@ namespace OmniMistressBot
                 //Configuration of Discord Client
                 Token = "",
                 TokenType = TokenType.Bot,
-                LoggerFactory = true,
                 MinimumLogLevel = LogLevel.Debug,
                 AutoReconnect = true
-            }); ;
+            });
 
             //Log if client is ready, guild is available, and if client errored
             discord.Ready += Discord_Ready;
@@ -61,10 +59,11 @@ namespace OmniMistressBot
             commands.CommandErrored += Commands_CommandErrored;
 
             //Command classes in use
-            commands.RegisterCommands<MemeCommands>();
             commands.RegisterCommands<InteractiveCommands>();
             commands.RegisterCommands<DiceRolls>();
             commands.RegisterCommands<RoleCommands>();
+            commands.RegisterCommands<MemeCommands>();
+            commands.RegisterCommands<Lavalink>();
 
             await discord.ConnectAsync();
             await Task.Delay(-1);
@@ -72,22 +71,22 @@ namespace OmniMistressBot
 
         private static Task Discord_Ready(DSharpPlus.EventArgs.ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "Mistress", "Ready = Yes", DateTime.Now);
+            e.Client.Logger.Log(LogLevel.Information, "MemeJam", "Ready = Yes", DateTime.Now);
             return Task.CompletedTask;
         }
         private static Task Discord_GuildAvailable(DSharpPlus.EventArgs.GuildCreateEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "Mistress", $"Guild available: {e.Guild.Name}", DateTime.Now);
+            e.Client.Logger.Log(LogLevel.Information, "MemeJam", $"Guild available: {e.Guild.Name}", DateTime.Now);
             return Task.CompletedTask;
         }
         private static Task Discord_ClientErrored(DSharpPlus.EventArgs.ClientErrorEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Error, "Mistress", $"Exception found: {e.Exception.GetType()}", DateTime.Now);
+            e.Client.Logger.Log(LogLevel.Error, "MemeJame", $"Exception found: {e.Exception.GetType()}", DateTime.Now);
             return Task.CompletedTask;
         }
         private static async Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
-            e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "Mistress", $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
+            e.Context.Client.Logger.Log(LogLevel.Error, "MemeJam", $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
             if (e.Exception is ChecksFailedException ex)
             {
                 var emoji = DiscordEmoji.FromName(e.Context.Client, ":no_entry:");
@@ -103,7 +102,7 @@ namespace OmniMistressBot
         }
         private static Task Commands_CommandExecuted(CommandExecutionEventArgs e)
         {
-            e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, "Mistress", $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}", DateTime.Now);
+            e.Context.Client.Logger.Log(LogLevel.Information, "MemeJame", $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}", DateTime.Now);
             return Task.CompletedTask;
         }
     }

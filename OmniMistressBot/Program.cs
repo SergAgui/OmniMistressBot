@@ -16,12 +16,7 @@ namespace OmniMistressBot
         static DiscordClient discord;
         static CommandsNextExtension commands;
         static InteractivityExtension interactivity;
-        
-        static void Main(string[] args)
-        {
-            MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-        static async Task MainAsync(string[] args)
+        static async Task MainAsync()
         {
             discord = new DiscordClient(new DiscordConfiguration
             {

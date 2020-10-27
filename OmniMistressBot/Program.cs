@@ -51,7 +51,7 @@ namespace OmniMistressBot
             //Voice channel will be used for broadcasting music
             voice = discord.UseVoiceNext(new VoiceNextConfiguration
             {
-                VoiceApplication = VoiceApplication.Music,
+                VoiceApplication = VoiceApplication.Voice,
                 EnableIncoming = false
             });
 

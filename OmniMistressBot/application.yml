@@ -11,9 +11,9 @@ lavalink:
       youtube: true
       bandcamp: true
       soundcloud: true
-      twitch: true
+      twitch: false
       vimeo: true
-      mixer: true
+      mixer: false
       http: true
       local: false
     bufferDurationMs: 400

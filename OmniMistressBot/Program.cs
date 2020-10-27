@@ -18,10 +18,11 @@ namespace OmniMistressBot
         static InteractivityExtension interactivity;
         static void Main(string[] args)
         {
-            MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
+            var bot = new Program();
+            bot.MainAsync().GetAwaiter().GetResult();
 
         }
-        static async Task MainAsync(string[] args)
+        public async Task MainAsync()
         {
             discord = new DiscordClient(new DiscordConfiguration
             {
@@ -43,8 +44,8 @@ namespace OmniMistressBot
                 Timeout = TimeSpan.FromMinutes(5)
             });
 
-            string[] prefixes = new string[] {"!", "."};
             //Set prefix to commands
+            string[] prefixes = new string[] {"!", "/"};
             commands = discord.UseCommandsNext(new CommandsNextConfiguration
             {
                 StringPrefixes = prefixes,
@@ -87,7 +88,7 @@ namespace OmniMistressBot
         private static async Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
             e.Context.Client.Logger.Log(LogLevel.Error, "MemeJam", $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
-            if (e.Exception is ChecksFailedException ex)
+            if (e.Exception is ChecksFailedException)
             {
                 var emoji = DiscordEmoji.FromName(e.Context.Client, ":no_entry:");
 

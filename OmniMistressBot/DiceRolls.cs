@@ -39,7 +39,7 @@ namespace OmniMistressBot
             await context.RespondAsync($"Rolls: [{String.Join(", ", rolls)}] Sum: {sum}");
         }
         
-        [Command("rolloff"), Aliases("rc", "ro"), Description("Challenge another user to a roll off, highest roll upgrades role! (ex. !rolloff @username)")]
+        [Command("rolloff"), Aliases("rc", "ro"), Description("Challenge another user to a roll off (ex. !rolloff @username)")]
         public async Task RoleRoll(CommandContext context, DiscordUser user)
         {
             InteractivityModule interactivity = context.Client.GetInteractivityModule();
@@ -57,7 +57,7 @@ namespace OmniMistressBot
 
             var agreeEmbed = new DiscordEmbedBuilder
             {
-                Title = $"{user.Username} has agreed! Role Off begins!!",
+                Title = $"{user.Username} has agreed! Roll Off begins!!",
                 Description = "Rolling..."
             };
 
@@ -77,11 +77,11 @@ namespace OmniMistressBot
                 }
                 else if (rollTwo > rollOne)
                 {
-                    await context.RespondAsync($"{user.Username} rolled a {rollTwo} to {context.Message.Author.Username}'s {rollOne}! Meaning they keep their Role. Better luck next time!");
+                    await context.RespondAsync($"{user.Username} rolled a {rollTwo} to {context.Message.Author.Username}'s {rollOne}! Better luck next time!");
                 }
                 else
                 {
-                    await context.RespondAsync($"There was a tie roll of {rollOne}. No changes to Roles... this time.");
+                    await context.RespondAsync($"There was a tie roll of {rollOne}.");
                 }
             }
             else if (emote.Emoji.Name == nope || emote == null)

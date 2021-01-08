@@ -62,7 +62,7 @@ namespace OmniMistressBot
             };
 
             //Starts the roll off and announces the victor unless there is a tie
-            //Refactor soon
+            //Maybe... Refactor
             var emote = await interactivity.WaitForReactionAsync(e => e == e.Name, user, TimeSpan.FromSeconds(30));
             if (emote.Emoji.Name == yes)
             {

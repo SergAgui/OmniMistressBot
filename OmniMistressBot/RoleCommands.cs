@@ -16,11 +16,24 @@ using DSharpPlus.Interactivity;
 
 namespace OmniMistressBot
 {
+    [RequireUserPermissions(Permissions.Administrator)]
     class RoleCommands
     {
-        [RequireOwner]
-        [Command("upgraderole"), Aliases("ur"), Description("Upgrade a user to any role [!ur @{user} {role}]")]
-        [Hidden]
+        //Create a new role
+        [Command("newroll"), Aliases("nr"), Description("Create a new roll. [!newrole {RoleName} {Color (hex code without the #)} {Permissions (can be left blank)} {Mentionable (can be left blank)} {Reason (can be left blank)}]")]
+        public async Task CreateRoll(CommandContext context, string name, string color, Permissions? permissions = null, bool mentionable = true, string reason = null)
+        {
+            var discordColor = new DiscordColor(color);
+
+            //Figure permissions next
+
+            await context.Guild.CreateRoleAsync(name, permissions, discordColor, null,mentionable, null);
+            
+            await context.RespondAsync($"Role {name} has been created. Color = {color} | Mentionable = {mentionable} | Permissions (if any) = {permissions}");
+        }
+
+        //Assign a role to a member
+        [Command("giverole"), Aliases("gr"), Description("Owner can assign a user to any role [!ur @{user} {role}]")]
         public async Task UpgradeRole(CommandContext context, DiscordMember member, string role)
         {
             //ReadOnlyList of roles in Guild to string list of names
@@ -36,16 +49,16 @@ namespace OmniMistressBot
             {
                 var upgradeRole = context.Guild.Roles.FirstOrDefault(x => x.Name == role);
                 await member.GrantRoleAsync(upgradeRole);
-                await context.RespondAsync($"Updated to {upgradeRole.Name}");
+                await context.RespondAsync($"{member.Username} has been the role {upgradeRole.Name}");
             }
             else
             {
                 await context.RespondAsync($"Couldn't complete. Either the {role} role does not exist in this server and bot's aren't people or {member.Username} is already part of that role.");
             }
         }
-        [RequireOwner]
-        [Command("downgraderole"), Aliases("dr", "downgrade"), Description("Take away a role from a user [!dr @{user} {role}]")]
-        [Hidden]
+
+        //Remove role from member
+        [Command("takerole"), Aliases("tr", "removerole"), Description("Take away a role from a user [!dr @{user} {role}]")]
         public async Task DowngradeRole(CommandContext context, DiscordMember member, string role)
         {
             //ReadOnlyList of roles in Guild to string list of names

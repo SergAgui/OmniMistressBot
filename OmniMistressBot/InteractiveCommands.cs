@@ -20,6 +20,8 @@ namespace OmniMistressBot
             InteractivityModule interactivity = context.Client.GetInteractivityModule();
 
             await context.RespondAsync("First to type the code within 30 seconds wins! Ready?");
+
+            //Count down from 3
             for (int i = 3; i >= 0; i--)
             {
                 await Task.Delay(TimeSpan.FromSeconds(1));
@@ -37,8 +39,7 @@ namespace OmniMistressBot
 
             var message = await interactivity.WaitForMessageAsync(c => c.Content.Contains(code), TimeSpan.FromSeconds(30));
 
-            //Below prevents bot from accepting itself stating the code as a response,
-            //but may still accept code from self and go to 'else'
+            //Prevent bot from accepting itself stating the code as a response, but may still accept code from self and go to 'else'
             if (message != null && message.User.IsBot == false)
             {
                 await context.RespondAsync($"The winner is: {message.User.Mention}");

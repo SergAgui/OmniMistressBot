@@ -10,8 +10,7 @@ using DSharpPlus.Entities;
 
 namespace OmniMistressBot
 {
-    [RequireUserPermissions(Permissions.Administrator)]
-    class ReactionRoles
+    class Collections
     {
         
     }

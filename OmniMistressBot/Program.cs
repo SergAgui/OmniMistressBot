@@ -74,7 +74,7 @@ namespace OmniMistressBot
             commands.RegisterCommands<DiceRolls>();
             commands.RegisterCommands<RoleCommands>();
             commands.RegisterCommands<MusicCommands>();
-            commands.RegisterCommands<ReactionRoles>();
+            commands.RegisterCommands<Collections>();
 
             await discord.ConnectAsync();
             await Task.Delay(-1);

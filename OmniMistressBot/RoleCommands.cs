@@ -20,8 +20,8 @@ namespace OmniMistressBot
     class RoleCommands
     {
         //Create a new role
-        [Command("newroll"), Aliases("nr"), Description("Create a new roll. [!newrole {RoleName} {Color (hex code without the #)} {Mentionable (can be left blank)} {Reason (can be left blank)}]")]
-        public async Task CreateRoll(CommandContext context, string roleName, string color, bool mentionable = true, string reason = null)
+        [Command("newroll"), Aliases("nr"), Description("Create a new roll. [!newrole {RoleName} {Color (hex code without the #)} {Mentionable (can be left blank)}]")]
+        public async Task CreateRoll(CommandContext context, string roleName, string color, bool mentionable = true)
         {
             var discordColor = new DiscordColor(color);
 
@@ -31,22 +31,19 @@ namespace OmniMistressBot
         }
 
         //Delete an existing role
-        [Command("deleterole"), Aliases("dr"), Description("Delete a specified role. [!deleterole {RoleName} {Reason (can be left blank)}]")]
-        public async Task DeleteRole(CommandContext context, string roleName, string reason = null)
+        [Command("deleterole"), Aliases("dr"), Description("Delete a specified role. [!deleterole {RoleName}]")]
+        public async Task DeleteRole(CommandContext context, string roleName)
         {
             //ReadOnlyList of roles in Guild to string list of names
             var guildRoles = context.Guild.Roles;
             List<string> guildRoleList = guildRoles.Select(item => item.Name).ToList();
 
-            //Reason for deleting role
-            string givenReason = reason == null ? "None given" : reason;
-
             //Check if role exists in server, respond with error if not
             if (guildRoleList.Exists(r => r == roleName))
             {
                 var discordRole = context.Guild.Roles.FirstOrDefault(x => x.Name == roleName);
-                await context.Guild.DeleteRoleAsync(discordRole, reason);
-                await context.RespondAsync($"{discordRole.Name} has been deleted. Reason: {givenReason}");
+                await context.Guild.DeleteRoleAsync(discordRole);
+                await context.RespondAsync($"{discordRole.Name} has been deleted.");
             }
             else
             {
@@ -110,6 +107,26 @@ namespace OmniMistressBot
             {
                 await context.RespondAsync($"Couldn't complete. Either the {role} role does not exist in this server and bot's aren't people or {member.Username} doesn't belong to that role.");
             }
+        }
+
+
+        public async Task ListRoles(CommandContext context)
+        {
+            List<string> guildRoleList = new List<string>();
+            var guildRoles = context.Guild.Roles;
+            foreach (var item in guildRoles)
+            {
+                guildRoleList.Add(item.Name);
+            }
+
+            var embed = new DiscordEmbedBuilder
+            {
+                Title = $"Available roles on {context.Guild.Name}",
+                Description = ""
+            };
+            await context.RespondAsync(embed: embed);
+
+            await context.RespondAsync();
         }
     }
 }

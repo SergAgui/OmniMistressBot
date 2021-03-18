@@ -18,7 +18,7 @@ namespace OmniMistressBot
     public class DiceRolls
     {
         [Command("roll"), Aliases("r"), Description("Rolls any size die a given number of times")]
-        public async Task Roll(CommandContext context, string dice)
+        public async Task DiceRoll(CommandContext context, string dice)
         {
             await context.TriggerTypingAsync();
             
@@ -40,7 +40,7 @@ namespace OmniMistressBot
         }
         
         [Command("rolloff"), Aliases("rc", "ro"), Description("Challenge another user to a roll off (ex. !rolloff @username)")]
-        public async Task RoleRoll(CommandContext context, DiscordUser user)
+        public async Task RollOff(CommandContext context, DiscordUser user)
         {
             InteractivityModule interactivity = context.Client.GetInteractivityModule();
             await context.TriggerTypingAsync();
@@ -62,7 +62,7 @@ namespace OmniMistressBot
             };
 
             //Starts the roll off and announces the victor unless there is a tie
-            //Refactor soon
+            //Maybe... Refactor
             var emote = await interactivity.WaitForReactionAsync(e => e == e.Name, user, TimeSpan.FromSeconds(30));
             if (emote.Emoji.Name == yes)
             {

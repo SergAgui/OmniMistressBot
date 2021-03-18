@@ -16,11 +16,43 @@ using DSharpPlus.Interactivity;
 
 namespace OmniMistressBot
 {
+    [RequireUserPermissions(Permissions.Administrator)]
     class RoleCommands
     {
-        [RequireOwner]
-        [Command("upgraderole"), Aliases("ur"), Description("Upgrade a user to any role [!ur @{user} {role}]")]
-        [Hidden]
+        //Create a new role
+        [Command("newroll"), Aliases("nr"), Description("Create a new roll. [!newrole {RoleName} {Color (hex code without the #)} {Mentionable (can be left blank)}]")]
+        public async Task CreateRoll(CommandContext context, string roleName, string color, bool mentionable = true)
+        {
+            var discordColor = new DiscordColor(color);
+
+            await context.Guild.CreateRoleAsync(roleName, null, discordColor, null,mentionable, null);
+            
+            await context.RespondAsync($"Role {roleName} has been created. Color = {color} | Mentionable = {mentionable}");
+        }
+
+        //Delete an existing role
+        [Command("deleterole"), Aliases("dr"), Description("Delete a specified role. [!deleterole {RoleName}]")]
+        public async Task DeleteRole(CommandContext context, string roleName)
+        {
+            //ReadOnlyList of roles in Guild to string list of names
+            var guildRoles = context.Guild.Roles;
+            List<string> guildRoleList = guildRoles.Select(item => item.Name).ToList();
+
+            //Check if role exists in server, respond with error if not
+            if (guildRoleList.Exists(r => r == roleName))
+            {
+                var discordRole = context.Guild.Roles.FirstOrDefault(x => x.Name == roleName);
+                await context.Guild.DeleteRoleAsync(discordRole);
+                await context.RespondAsync($"{discordRole.Name} has been deleted.");
+            }
+            else
+            {
+                await context.RespondAsync($"Could not complete deletion. Either the {roleName} role does not exist in this server or role was misspelled. Roles are case sensitive.");
+            }
+        }
+
+        //Assign a role to a member
+        [Command("giverole"), Aliases("gr"), Description("Owner can assign a user to any role [!ur @{user} {role}]")]
         public async Task UpgradeRole(CommandContext context, DiscordMember member, string role)
         {
             //ReadOnlyList of roles in Guild to string list of names
@@ -36,16 +68,16 @@ namespace OmniMistressBot
             {
                 var upgradeRole = context.Guild.Roles.FirstOrDefault(x => x.Name == role);
                 await member.GrantRoleAsync(upgradeRole);
-                await context.RespondAsync($"Updated to {upgradeRole.Name}");
+                await context.RespondAsync($"{member.Username} has been the role {upgradeRole.Name}");
             }
             else
             {
                 await context.RespondAsync($"Couldn't complete. Either the {role} role does not exist in this server and bot's aren't people or {member.Username} is already part of that role.");
             }
         }
-        [RequireOwner]
-        [Command("downgraderole"), Aliases("dr", "downgrade"), Description("Take away a role from a user [!dr @{user} {role}]")]
-        [Hidden]
+
+        //Remove role from member
+        [Command("takerole"), Aliases("tr", "removerole"), Description("Take away a role from a user [!dr @{user} {role}]")]
         public async Task DowngradeRole(CommandContext context, DiscordMember member, string role)
         {
             //ReadOnlyList of roles in Guild to string list of names
@@ -75,6 +107,26 @@ namespace OmniMistressBot
             {
                 await context.RespondAsync($"Couldn't complete. Either the {role} role does not exist in this server and bot's aren't people or {member.Username} doesn't belong to that role.");
             }
+        }
+
+
+        public async Task ListRoles(CommandContext context)
+        {
+            List<string> guildRoleList = new List<string>();
+            var guildRoles = context.Guild.Roles;
+            foreach (var item in guildRoles)
+            {
+                guildRoleList.Add(item.Name);
+            }
+
+            var embed = new DiscordEmbedBuilder
+            {
+                Title = $"Available roles on {context.Guild.Name}",
+                Description = ""
+            };
+            await context.RespondAsync(embed: embed);
+
+            await context.RespondAsync();
         }
     }
 }
